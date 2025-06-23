@@ -4,199 +4,322 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
 /**
- * 실습 6: useScroll & Scroll-based Animations
+ * 실습 6: Advanced Transforms & Scroll
  *
- * 목표: 스크롤 기반 애니메이션을 마스터해보세요
+ * 목표: 스크롤 기반 고급 변환 애니메이션을 마스터해보세요
  *
  * 실습 과제:
  * 1. 스크롤 프로그레스 인디케이터 만들기
- * 2. 복합 스크롤 애니메이션 구현하기
+ * 2. 스크롤 트리거 애니메이션
+ * 3. 패럴랙스 스크롤 효과
  */
 
-export default function AdvancedTransformsPractice() {
+// Answer Components
+function ScrollProgressAnswer() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ container: containerRef });
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
   return (
-    <div className="p-8 space-y-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">
-          실습 6: useScroll & Scroll-based Animations
-        </h2>
-        <p className="text-gray-600">스크롤 기반 애니메이션을 구현해보세요</p>
+    <div className="bg-gray-50 p-6 rounded-lg border-2 border-green-200">
+      <div className="relative">
+        <motion.div style={{ scaleX }} className="absolute top-0 left-0 right-0 h-1 bg-blue-500 origin-left z-10" />
+        <div ref={containerRef} className="h-48 overflow-y-scroll bg-white rounded-lg p-4 space-y-4">
+          <p className="text-sm text-gray-600">스크롤해보세요! 위의 파란 바가 진행도를 보여줍니다.</p>
+          {Array.from({ length: 20 }, (_, i) => (
+            <div key={i} className="p-4 bg-gray-100 rounded-lg">
+              스크롤 콘텐츠 {i + 1}
+            </div>
+          ))}
+        </div>
       </div>
+    </div>
+  );
+}
 
-      {/* 실습 1: 스크롤 프로그레스 인디케이터 */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-xl font-semibold mb-4 text-gray-700">
-          실습 1: 스크롤 프로그레스 인디케이터
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          TODO: 컨테이너 내부 스크롤 진행도에 따라 상단 바가 채워지는
-          인디케이터를 만들어보세요
-        </p>
+function ScrollTriggeredAnswer() {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"],
+  });
 
-        {/* TODO: 스크롤 프로그레스 구현 */}
-        {/* 
-        const containerRef = useRef(null);
-        const { scrollYProgress } = useScroll({ container: containerRef });
-        const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-        */}
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.8, 1, 1, 0.8]);
+  const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [100, 0, 0, -100]);
 
-        <div className="relative">
-          <div
-            className="absolute top-0 left-0 right-0 h-1 bg-blue-500 origin-left"
-            // TODO: motion.div로 변경하고 scaleX 적용
-            // style={{ scaleX }}
-          />
-          <div
-            className="h-48 overflow-y-scroll bg-gray-50 rounded-lg p-4 space-y-4"
-            // TODO: ref 추가
-          >
-            {Array.from({ length: 10 }, (_, i) => (
-              <div key={i} className="h-16 bg-white rounded shadow p-4">
-                <h4 className="font-semibold">Content Block {i + 1}</h4>
-                <p className="text-sm text-gray-600">
-                  스크롤하면 상단의 프로그레스 바가 채워집니다.
-                </p>
-              </div>
-            ))}
-          </div>
+  return (
+    <div className="bg-gray-50 p-6 rounded-lg border-2 border-green-200">
+      <div className="h-96 overflow-y-scroll bg-white rounded-lg">
+        <div className="h-[200px] bg-gradient-to-b from-blue-100 to-purple-100 p-4">
+          <p className="text-sm">스크롤하면서 아래 요소를 관찰해보세요</p>
         </div>
 
-        <div className="mt-4 bg-gray-800 text-gray-100 p-4 rounded text-sm">
-          <code>
-            {`// TODO: 스크롤 프로그레스를 구현해보세요
+        <motion.div
+          ref={targetRef}
+          style={{ opacity, scale, y }}
+          className="mx-4 my-8 p-6 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-lg text-center font-bold"
+        >
+          스크롤 트리거 애니메이션! 🎉
+        </motion.div>
+
+        <div className="h-[200px] bg-gradient-to-b from-green-100 to-blue-100 p-4">
+          <p className="text-sm">더 스크롤해보세요</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ParallaxAnswer() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ container: containerRef });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "200%"]);
+
+  return (
+    <div className="bg-gray-50 p-6 rounded-lg border-2 border-green-200">
+      <div ref={containerRef} className="h-64 overflow-y-scroll relative rounded-lg">
+        <motion.div
+          style={{ y: backgroundY }}
+          className="absolute inset-0 bg-gradient-to-b from-purple-400 via-pink-500 to-red-500"
+        />
+
+        <motion.div style={{ y: textY }} className="relative z-10 h-full flex items-center justify-center">
+          <h2 className="text-4xl font-bold text-white text-center">패럴랙스 효과! ✨</h2>
+        </motion.div>
+
+        <div className="h-[400px] bg-gray-800 relative z-20">
+          <div className="p-8 text-white">
+            <h3 className="text-2xl font-bold mb-4">추가 콘텐츠</h3>
+            <p>배경과 텍스트가 다른 속도로 움직이는 패럴랙스 효과를 확인해보세요.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Practice Components
+function ScrollProgressPractice() {
+  return (
+    <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+      <h4 className="text-md font-semibold mb-3 text-blue-700">👨‍💻 여기서 연습해보세요:</h4>
+      <p className="text-sm text-blue-600 mb-4">
+        TODO: 스크롤 진행도에 따라 상단 바가 채워지는 인디케이터를 만들어보세요
+      </p>
+
+      <div className="relative">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gray-300">
+          {/* TODO: motion.div로 변경하고 scaleX 적용 */}
+        </div>
+        <div className="h-48 overflow-y-scroll bg-white rounded-lg p-4 space-y-4">
+          <p className="text-sm text-gray-600">스크롤해보세요!</p>
+          {Array.from({ length: 15 }, (_, i) => (
+            <div key={i} className="p-4 bg-gray-100 rounded-lg">
+              스크롤 콘텐츠 {i + 1}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 bg-gray-800 text-gray-100 p-4 rounded text-sm">
+        <code>
+          {`// TODO: 스크롤 프로그레스
 const containerRef = useRef(null);
-const { scrollYProgress } = useScroll({ 
-  container: ? 
-});
-const scaleX = useTransform(scrollYProgress, [?, ?], [?, ?]);
+const { scrollYProgress } = useScroll({ container: containerRef });
+const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-<motion.div 
-  style={{ scaleX }} 
-  className="progress-bar"
+<motion.div
+  style={{ scaleX }}
+  className="absolute top-0 left-0 right-0 h-1 bg-blue-500 origin-left"
 />`}
-          </code>
+        </code>
+      </div>
+    </div>
+  );
+}
+
+function ScrollTriggeredPractice() {
+  return (
+    <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+      <h4 className="text-md font-semibold mb-3 text-blue-700">👨‍💻 여기서 연습해보세요:</h4>
+      <p className="text-sm text-blue-600 mb-4">
+        TODO: 요소가 뷰포트에 들어올 때 나타나는 스크롤 트리거 애니메이션을 만들어보세요
+      </p>
+
+      <div className="h-80 overflow-y-scroll bg-white rounded-lg">
+        <div className="h-[150px] bg-gradient-to-b from-blue-100 to-purple-100 p-4">
+          <p className="text-sm">스크롤하면서 아래 요소를 관찰해보세요</p>
+        </div>
+
+        <div className="mx-4 my-8 p-6 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-lg text-center font-bold">
+          스크롤 트리거 애니메이션! 🎉
+          {/* TODO: motion.div로 변경하고 스크롤 트리거 적용 */}
+        </div>
+
+        <div className="h-[150px] bg-gradient-to-b from-green-100 to-blue-100 p-4">
+          <p className="text-sm">더 스크롤해보세요</p>
         </div>
       </div>
 
-      {/* 실습 2: 복합 스크롤 애니메이션 */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-xl font-semibold mb-4 text-gray-700">
-          실습 2: 복합 스크롤 애니메이션 챌린지
-        </h3>
-        <p className="text-sm text-gray-600 mb-4">
-          TODO: 스크롤 위치에 따라 여러 요소가 서로 다른 타이밍으로 나타나고
-          사라지는 복합 애니메이션을 만들어보세요
-        </p>
-
-        {/* TODO: 복합 스크롤 애니메이션 구현 */}
-        {/* 
-        const ref = useRef(null);
-        const { scrollYProgress } = useScroll({
-          target: ref,
-          offset: ["start end", "end start"]
-        });
-        
-        const opacity1 = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-        const scale1 = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.5, 1, 1, 0.5]);
-        const y1 = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [100, 0, 0, -100]);
-        
-        const opacity2 = useTransform(scrollYProgress, [0.2, 0.5, 0.8, 1], [0, 1, 1, 0]);
-        const scale2 = useTransform(scrollYProgress, [0.2, 0.5, 0.8, 1], [0.3, 1.2, 1.2, 0.3]);
-        const rotate2 = useTransform(scrollYProgress, [0.2, 0.5, 0.8, 1], [180, 0, 0, -180]);
-        */}
-
-        <div className="space-y-8">
-          <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-            <p className="text-gray-500">
-              스크롤하여 아래 요소들이 나타나는 것을 확인하세요
-            </p>
-          </div>
-
-          <div
-            className="space-y-6"
-            // TODO: ref 추가
-          >
-            <div
-              className="h-32 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-xl"
-              // TODO: motion.div로 변경하고 첫 번째 애니메이션 적용
-              // style={{ opacity: opacity1, scale: scale1, y: y1 }}
-            >
-              First Element
-            </div>
-
-            <div
-              className="h-32 bg-gradient-to-r from-purple-400 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-xl"
-              // TODO: motion.div로 변경하고 두 번째 애니메이션 적용
-              // style={{ opacity: opacity2, scale: scale2, rotate: rotate2 }}
-            >
-              Second Element
-            </div>
-          </div>
-
-          <div className="h-32 bg-gray-100 rounded-lg flex items-center justify-center">
-            <p className="text-gray-500">더 스크롤하면 요소들이 사라집니다</p>
-          </div>
-        </div>
-
-        <div className="mt-4 bg-gray-800 text-gray-100 p-4 rounded text-sm">
-          <code>
-            {`// TODO: 복합 스크롤 애니메이션을 구현해보세요
-const ref = useRef(null);
+      <div className="mt-4 bg-gray-800 text-gray-100 p-4 rounded text-sm">
+        <code>
+          {`// TODO: 스크롤 트리거
+const targetRef = useRef(null);
 const { scrollYProgress } = useScroll({
-  target: ?,
+  target: targetRef,
   offset: ["start end", "end start"]
 });
 
-// 첫 번째 요소 - 부드럽게 나타나고 사라짐
-const opacity1 = useTransform(scrollYProgress, [?, ?, ?, ?], [?, ?, ?, ?]);
-const scale1 = useTransform(scrollYProgress, [?, ?, ?, ?], [?, ?, ?, ?]);
-const y1 = useTransform(scrollYProgress, [?, ?, ?, ?], [?, ?, ?, ?]);
+const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);`}
+        </code>
+      </div>
+    </div>
+  );
+}
 
-// 두 번째 요소 - 다른 타이밍과 회전 효과
-const opacity2 = useTransform(scrollYProgress, [?, ?, ?, ?], [?, ?, ?, ?]);
-const scale2 = useTransform(scrollYProgress, [?, ?, ?, ?], [?, ?, ?, ?]);
-const rotate2 = useTransform(scrollYProgress, [?, ?, ?, ?], [?, ?, ?, ?]);`}
-          </code>
+function ParallaxPractice() {
+  return (
+    <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+      <h4 className="text-md font-semibold mb-3 text-blue-700">👨‍💻 여기서 연습해보세요:</h4>
+      <p className="text-sm text-blue-600 mb-4">
+        TODO: 배경과 텍스트가 다른 속도로 움직이는 패럴랙스 효과를 만들어보세요
+      </p>
+
+      <div className="h-64 overflow-y-scroll relative rounded-lg bg-white">
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-400 via-pink-500 to-red-500">
+          {/* TODO: motion.div로 변경하고 패럴랙스 적용 */}
+        </div>
+
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <h2 className="text-4xl font-bold text-white text-center">
+            패럴랙스 효과! ✨{/* TODO: motion.div로 변경하고 다른 속도 적용 */}
+          </h2>
+        </div>
+
+        <div className="h-[300px] bg-gray-800 relative z-20 p-8 text-white">
+          <h3 className="text-2xl font-bold mb-4">추가 콘텐츠</h3>
+          <p>배경과 텍스트가 다른 속도로 움직여야 합니다.</p>
         </div>
       </div>
 
-      {/* 추가 챌린지 */}
-      <div className="bg-indigo-50 border-l-4 border-indigo-400 p-6">
-        <h3 className="text-lg font-semibold text-indigo-800 mb-2">
-          🎯 추가 챌린지
-        </h3>
-        <ul className="text-indigo-700 space-y-2">
-          <li>• 스크롤 방향에 따라 다른 애니메이션 적용하기</li>
-          <li>• 페이지 전체 스크롤과 개별 요소 스크롤 조합하기</li>
-          <li>• 여러 요소의 연쇄적인 스크롤 애니메이션</li>
-          <li>• 스크롤 속도에 따라 애니메이션 강도 조절하기</li>
-          <li>• 텍스트 애니메이션과 스크롤 효과 조합하기</li>
-        </ul>
+      <div className="mt-4 bg-gray-800 text-gray-100 p-4 rounded text-sm">
+        <code>
+          {`// TODO: 패럴랙스 효과
+const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+const textY = useTransform(scrollYProgress, [0, 1], ["0%", "200%"]);
+
+<motion.div style={{ y: backgroundY }} />
+<motion.div style={{ y: textY }} />`}
+        </code>
+      </div>
+    </div>
+  );
+}
+
+export default function AdvancedTransformsPractice() {
+  return (
+    <div className="max-w-6xl mx-auto p-8">
+      <h1 className="text-4xl font-bold mb-8 text-center">Advanced Transforms & Scroll 실습</h1>
+
+      <div className="space-y-12">
+        {/* 1. 스크롤 프로그레스 실습 */}
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">📖 1. 스크롤 프로그레스</h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* 목표 */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-green-600">✅ 목표 (Answer)</h3>
+              <ScrollProgressAnswer />
+            </div>
+
+            {/* 실습 */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-blue-600">👨‍💻 실습 (Practice)</h3>
+              <ScrollProgressPractice />
+            </div>
+          </div>
+        </div>
+
+        {/* 2. 스크롤 트리거 실습 */}
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">📖 2. 스크롤 트리거 애니메이션</h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* 목표 */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-green-600">✅ 목표 (Answer)</h3>
+              <ScrollTriggeredAnswer />
+            </div>
+
+            {/* 실습 */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-blue-600">👨‍💻 실습 (Practice)</h3>
+              <ScrollTriggeredPractice />
+            </div>
+          </div>
+        </div>
+
+        {/* 3. 패럴랙스 실습 */}
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">📖 3. 패럴랙스 효과</h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* 목표 */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-green-600">✅ 목표 (Answer)</h3>
+              <ParallaxAnswer />
+            </div>
+
+            {/* 실습 */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4 text-blue-600">👨‍💻 실습 (Practice)</h3>
+              <ParallaxPractice />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* 참고 자료 */}
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-6">
-        <h3 className="text-lg font-semibold text-blue-800 mb-2">
-          📚 참고 자료
-        </h3>
-        <div className="text-blue-700 space-y-2">
+      {/* 추가 정보 */}
+      <div className="mt-12 bg-gradient-to-r from-indigo-50 to-cyan-50 rounded-lg p-8">
+        <h2 className="text-2xl font-bold mb-4 text-center">🎯 추가 챌린지</h2>
+        <div className="space-y-4 text-gray-700">
           <p>
-            <strong>useScroll:</strong> useScroll(&#123; container, target,
-            offset &#125;)
+            <strong>초급:</strong> 다양한 offset 값으로 스크롤 트리거 타이밍을 조절해보세요
           </p>
           <p>
-            <strong>scrollYProgress:</strong> 0-1 범위의 스크롤 진행도
+            <strong>중급:</strong> 여러 요소가 동시에 움직이는 복잡한 패럴랙스 씬을 만들어보세요
           </p>
           <p>
-            <strong>offset:</strong> ["start end", "end start"] 등으로 트리거
-            범위 설정
+            <strong>고급:</strong> 3D 변환과 스크롤을 결합한 입체적인 애니메이션을 구현해보세요
           </p>
-          <p>
-            <strong>scaleX:</strong> 프로그레스 바의 핵심 변환
-          </p>
-          <p>
-            <strong>target:</strong> 특정 요소를 대상으로 한 스크롤 추적
-          </p>
+        </div>
+
+        <div className="mt-6 bg-white/50 rounded-lg p-4">
+          <h3 className="font-semibold mb-2">💡 Scroll 애니메이션 핵심 개념</h3>
+          <div className="text-sm space-y-1">
+            <p>
+              <code>useScroll()</code>: 스크롤 기반 Motion Value 생성
+            </p>
+            <p>
+              <code>scrollYProgress</code>: 스크롤 진행률 (0-1)
+            </p>
+            <p>
+              <code>target</code>: 특정 요소를 기준으로 스크롤 측정
+            </p>
+            <p>
+              <code>container</code>: 스크롤 컨테이너 지정
+            </p>
+            <p>
+              <code>offset</code>: 스크롤 시작/끝 지점 설정
+            </p>
+            <p>
+              <code>useTransform()</code>: 스크롤 값을 다른 값으로 변환
+            </p>
+          </div>
         </div>
       </div>
     </div>
