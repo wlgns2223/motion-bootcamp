@@ -1,4 +1,4 @@
-import MotionValues from "@/components/framer-advanced/05-motion-values";
+import MotionValues from "@/components/framer-lessons/05-motion-values";
 import Navigation from "@/components/Navigation";
 
 export default function MotionValuesDemoPage() {

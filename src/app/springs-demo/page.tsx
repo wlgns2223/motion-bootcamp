@@ -1,4 +1,4 @@
-import SpringAnimations from "@/components/framer-advanced/06-spring-animations";
+import SpringAnimations from "@/components/framer-lessons/06-spring-animations";
 import Navigation from "@/components/Navigation";
 
 export default function SpringsDemoPage() {

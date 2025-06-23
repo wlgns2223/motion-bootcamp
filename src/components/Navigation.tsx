@@ -143,7 +143,7 @@ export default function Navigation({
                 >
                   <div className="p-2">
                     <div className="text-xs font-semibold text-gray-500 px-3 py-2">기초 과정 강의</div>
-                    {lessons.slice(0, 3).map((lesson) => (
+                    {lessons.slice(0, 4).map((lesson) => (
                       <button
                         key={lesson.id}
                         onClick={() => handlePageNavigation(lesson.demoPath)}
@@ -155,7 +155,7 @@ export default function Navigation({
                     ))}
 
                     <div className="text-xs font-semibold text-gray-500 px-3 py-2 mt-2">고급 과정 강의</div>
-                    {lessons.slice(3).map((lesson) => (
+                    {lessons.slice(4).map((lesson) => (
                       <button
                         key={lesson.id}
                         onClick={() => handlePageNavigation(lesson.demoPath)}
@@ -200,7 +200,7 @@ export default function Navigation({
                 >
                   <div className="p-2">
                     <div className="text-xs font-semibold text-gray-500 px-3 py-2">기초 과정 실습</div>
-                    {lessons.slice(0, 3).map((lesson) => (
+                    {lessons.slice(0, 4).map((lesson) => (
                       <button
                         key={lesson.id}
                         onClick={() => handlePageNavigation(lesson.practicePath)}
@@ -212,7 +212,7 @@ export default function Navigation({
                     ))}
 
                     <div className="text-xs font-semibold text-gray-500 px-3 py-2 mt-2">고급 과정 실습</div>
-                    {lessons.slice(3).map((lesson) => (
+                    {lessons.slice(4).map((lesson) => (
                       <button
                         key={lesson.id}
                         onClick={() => handlePageNavigation(lesson.practicePath)}
