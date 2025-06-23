@@ -1,9 +1,36 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useState } from "react";
 import SlideInLiveCoding from "../../live-coding/SlideInLiveCoding";
 
 export default function Lesson2_SlideIn() {
+  // 단계별 진행을 위한 상태
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const steps = [
+    {
+      name: "motion.div 설정",
+      description: "일반 div를 motion.div로 변경하여 애니메이션 기능 활성화",
+      code: "import { motion } from 'motion/react'\n<motion.div>",
+    },
+    {
+      name: "initial 속성 추가",
+      description: "시작 상태를 설정 - X축 위치 -100px, 투명도 0으로 설정",
+      code: "initial={{ x: -100, opacity: 0 }}",
+    },
+    {
+      name: "animate 속성 추가",
+      description: "최종 상태를 정의 - X축 위치 0px, 투명도 1로 설정하여 제자리에서 보이게",
+      code: "animate={{ x: 0, opacity: 1 }}",
+    },
+    {
+      name: "transition 설정",
+      description: "애니메이션 지속시간을 0.8초로 설정하여 부드러운 슬라이드 효과",
+      code: "transition={{ duration: 0.8 }}",
+    },
+  ];
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <h3 className="text-xl font-semibold mb-6 text-gray-800">📚 강의 2: Slide In 애니메이션</h3>
@@ -41,26 +68,49 @@ transition={{ duration: 0.8 }}`}
         </ol>
       </div>
 
-      {/* 라이브 코딩 영역 */}
-      <SlideInLiveCoding />
+      {/* 단계별 진행 가이드 */}
+      <div className="bg-white p-4 rounded-lg border-2 border-green-200 mb-6">
+        <h4 className="font-semibold text-gray-700 mb-3">📚 강의 진행 가이드</h4>
 
-      {/* 단계별 힌트 */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-gray-50 p-4 rounded">
-          <h5 className="font-semibold text-gray-800 mb-2">1-2단계: 시작 상태</h5>
-          <code className="text-sm text-gray-600">
-            {`<motion.div 
-  initial={{ x: -100, opacity: 0 }}
-  className="...">`}
-          </code>
+        {/* 단계 네비게이션 */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {steps.map((step, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentStep(index)}
+              className={`px-3 py-1 text-sm rounded transition-colors ${
+                currentStep === index ? "bg-green-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {index + 1}. {step.name}
+            </button>
+          ))}
         </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <h5 className="font-semibold text-gray-800 mb-2">3-4단계: 최종 상태</h5>
-          <code className="text-sm text-gray-600">
-            {`animate={{ x: 0, opacity: 1 }}
-transition={{ duration: 0.8 }}`}
-          </code>
+
+        {/* 현재 단계 정보 */}
+        <div className="p-3 bg-green-50 rounded border border-green-200">
+          <div className="text-sm">
+            <strong>현재 단계:</strong> {steps[currentStep].name}
+            <br />
+            <strong>설명:</strong> {steps[currentStep].description}
+            <br />
+            <strong>코드:</strong>{" "}
+            <code className="bg-white px-2 py-1 rounded text-xs font-mono text-green-600">
+              {steps[currentStep].code}
+            </code>
+          </div>
         </div>
+      </div>
+
+      {/* 라이브 코딩 영역 */}
+      <div>
+        <h4 className="font-semibold text-gray-700 mb-3 flex items-center">
+          👨‍💻 강사 실시간 코딩 영역
+          <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+            강사가 직접 코드를 작성합니다
+          </span>
+        </h4>
+        <SlideInLiveCoding />
       </div>
     </div>
   );

@@ -4,9 +4,11 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import StaggerAnimationLiveCoding from "../../live-coding/StaggerAnimationLiveCoding";
 
-// 강의 3: Stagger 애니메이션
 export default function Lesson3_StaggerAnimation() {
   const [cardsVisible, setCardsVisible] = useState(false);
+
+  // 단계별 진행을 위한 상태
+  const [currentStep, setCurrentStep] = useState(0);
 
   // 카드 컨테이너 variants
   const cardContainerVariants = {
@@ -45,13 +47,112 @@ export default function Lesson3_StaggerAnimation() {
     },
   };
 
+  const steps = [
+    {
+      name: "카드 컨테이너 variants 정의",
+      description: "Stagger 애니메이션을 제어할 부모 컨테이너의 variants를 정의합니다.",
+      code: `const cardContainerVariants = {
+  hidden: {
+    opacity: 0,     // 컨테이너 시작 시 투명
+  },
+  visible: {
+    opacity: 1,     // 컨테이너 보이게 됨
+    transition: {
+      delayChildren: 0.3,      // 자식들 시작 전 0.3초 대기
+      staggerChildren: 0.2,    // 각 자식 사이 0.2초 간격
+      when: "beforeChildren",  // 부모 먼저, 자식 나중
+    },
+  },
+};`,
+    },
+    {
+      name: "개별 카드 variants 정의",
+      description: "각 카드가 어떻게 애니메이션될지 정의합니다. 3D 변형과 스프링 효과를 포함합니다.",
+      code: `const cardVariants = {
+  hidden: {
+    y: 100,         // 아래로 100px 이동된 상태
+    opacity: 0,     // 투명한 상태
+    scale: 0.5,     // 50% 크기로 축소
+    rotateX: -45,   // X축으로 -45도 회전 (3D 효과)
+  },
+  visible: {
+    y: 0,           // 원래 위치
+    opacity: 1,     // 완전히 보이게
+    scale: 1,       // 원래 크기
+    rotateX: 0,     // 회전 없음
+    transition: {
+      type: "spring",   // 스프링 애니메이션
+      damping: 15,      // 감쇠 효과
+      stiffness: 120,   // 스프링 강도
+    },
+  },
+};`,
+    },
+    {
+      name: "Grid 레이아웃 설정",
+      description: "카드들을 격자 형태로 배치하고 부모 컨테이너에 variants를 연결합니다.",
+      code: `<motion.div
+  variants={cardContainerVariants}    // 컨테이너 variants 연결
+  initial="hidden"
+  animate={cardsVisible ? "visible" : "hidden"}
+  className="grid grid-cols-1 md:grid-cols-3 gap-4"
+>
+  {/* 여기에 카드들이 들어감 */}
+</motion.div>`,
+    },
+    {
+      name: "각 카드에 variants 적용",
+      description: "각 카드에 variants를 적용하여 순차적으로 나타나는 애니메이션을 구현합니다.",
+      code: `{/* 각 카드는 동일한 variants 사용 */}
+<motion.div
+  variants={cardVariants}    // 카드 variants 연결
+  className="p-6 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl"
+>
+  <div className="text-3xl mb-3">🚀</div>
+  <h4 className="font-semibold">Fast Performance</h4>
+</motion.div>
+
+// animate 속성을 각 카드에 따로 설정할 필요 없음!
+// 부모로부터 자동으로 전파됨`,
+    },
+  ];
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <h3 className="text-xl font-semibold mb-6 text-gray-800">📚 강의 3: Stagger 애니메이션</h3>
 
-      {/* 예제 시연 */}
+      {/* 단계별 네비게이션 */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {steps.map((step, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentStep(index)}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              currentStep === index ? "bg-purple-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            {index + 1}. {step.name}
+          </button>
+        ))}
+      </div>
+
+      {/* 현재 단계 설명 */}
       <div className="bg-purple-50 p-6 rounded-lg border-l-4 border-purple-400 mb-6">
-        <h4 className="text-lg font-semibold mb-4 text-purple-800">✨ 완성된 예제</h4>
+        <h4 className="text-lg font-semibold mb-3 text-purple-800">
+          단계 {currentStep + 1}: {steps[currentStep].name}
+        </h4>
+        <p className="text-purple-700 mb-4">{steps[currentStep].description}</p>
+
+        <div className="bg-gray-800 text-gray-100 p-4 rounded-lg">
+          <pre className="text-sm overflow-x-auto">
+            <code>{steps[currentStep].code}</code>
+          </pre>
+        </div>
+      </div>
+
+      {/* 완성된 예제 */}
+      <div className="bg-gray-50 p-6 rounded-lg mb-6">
+        <h4 className="text-lg font-semibold mb-4 text-gray-800">✨ 완성된 예제</h4>
         <div className="flex flex-col items-center gap-4 mb-4">
           <motion.div
             key={cardsVisible ? "visible" : "hidden"}
@@ -95,78 +196,17 @@ export default function Lesson3_StaggerAnimation() {
             {cardsVisible ? "🫥 Hide Cards" : "✨ Show Cards"} (Current: {cardsVisible ? "Visible" : "Hidden"})
           </button>
         </div>
-        <div className="bg-gray-800 text-gray-100 p-4 rounded text-sm">
-          <code>
-            {`const cardContainerVariants = {
-  visible: {
-    transition: { 
-      delayChildren: 0.3, 
-      staggerChildren: 0.15 
-    }
-  }
-};
-
-const cardVariants = {
-  hidden: { y: 60, opacity: 0, scale: 0.8 },
-  visible: { y: 0, opacity: 1, scale: 1 }
-};`}
-          </code>
-        </div>
-      </div>
-
-      {/* 코드 작성 단계 */}
-      <div className="bg-purple-50 border-l-4 border-purple-400 p-4 mb-4">
-        <h4 className="font-semibold text-purple-800 mb-2">📝 코드 작성 단계</h4>
-        <ol className="text-purple-700 space-y-1 text-sm">
-          <li>1단계: 카드 컨테이너 variants 정의 (staggerChildren으로 지연 설정)</li>
-          <li>2단계: 개별 카드 variants 정의 (spring transition 포함)</li>
-          <li>3단계: Grid 레이아웃으로 카드 배치</li>
-          <li>4단계: 각 카드에 variants 적용하여 순차적 애니메이션 구현</li>
-        </ol>
       </div>
 
       {/* 라이브 코딩 영역 */}
-      <StaggerAnimationLiveCoding />
-
-      {/* 단계별 힌트 */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-gray-50 p-4 rounded">
-          <h5 className="font-semibold text-gray-800 mb-2">1-2단계: Stagger 설정</h5>
-          <code className="text-sm text-gray-600">
-            {`const cardContainerVariants = {
-  visible: {
-    transition: {
-      delayChildren: 0.3,
-      staggerChildren: 0.15
-    }
-  }
-};`}
-          </code>
-        </div>
-        <div className="bg-gray-50 p-4 rounded">
-          <h5 className="font-semibold text-gray-800 mb-2">3-4단계: 카드 variants</h5>
-          <code className="text-sm text-gray-600">
-            {`const cardVariants = {
-  hidden: { y: 60, opacity: 0, scale: 0.8 },
-  visible: { 
-    y: 0, opacity: 1, scale: 1,
-    transition: { type: "spring" }
-  }
-};`}
-          </code>
-        </div>
-      </div>
-
-      {/* 완성 체크리스트 */}
-      <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
-        <h5 className="font-semibold text-green-800 mb-2">✅ 완성 체크리스트</h5>
-        <ul className="text-green-700 space-y-1 text-sm">
-          <li>□ 기본 variants 정의 및 사용</li>
-          <li>□ 부모-자식 variants 전파</li>
-          <li>□ delayChildren으로 시작 지연</li>
-          <li>□ staggerChildren으로 순차 애니메이션</li>
-          <li>□ spring transition으로 자연스러운 움직임</li>
-        </ul>
+      <div>
+        <h4 className="font-semibold text-gray-700 mb-3 flex items-center">
+          👨‍💻 강사 실시간 코딩 영역
+          <span className="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+            강사가 직접 코드를 작성합니다
+          </span>
+        </h4>
+        <StaggerAnimationLiveCoding />
       </div>
     </div>
   );
