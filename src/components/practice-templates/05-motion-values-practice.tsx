@@ -4,7 +4,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "motion/react";
 import { useState } from "react";
 
 /**
- * 실습 4: Motion Values
+ * 실습 5: Motion Values
  *
  * 목표: Motion Values를 활용하여 실시간 반응형 애니메이션을 구현해보세요
  *
@@ -217,7 +217,7 @@ export default function MotionValuesPractice() {
 
   return (
     <div className="max-w-6xl mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Motion Values 실습</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">5. Motion Values 실습</h1>
 
       <div className="space-y-12">
         {/* 1. 기본 Motion Value 실습 */}

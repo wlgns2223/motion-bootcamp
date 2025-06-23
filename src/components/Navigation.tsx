@@ -21,13 +21,19 @@ const lessons = [
   },
   { id: "variants", title: "3. Variants", demoPath: "/variants-demo", practicePath: "/variants-practice" },
   {
+    id: "animate-presence",
+    title: "4. AnimatePresence",
+    demoPath: "/animate-presence-demo",
+    practicePath: "/animate-presence-practice",
+  },
+  {
     id: "motion-values",
-    title: "4. Motion Values",
+    title: "5. Motion Values",
     demoPath: "/motion-values-demo",
     practicePath: "/motion-values-practice",
   },
-  { id: "springs", title: "5. Spring Animations", demoPath: "/springs-demo", practicePath: "/springs-practice" },
-  { id: "advanced", title: "6. Advanced Transforms", demoPath: "/advanced-demo", practicePath: "/advanced-practice" },
+  { id: "springs", title: "6. Spring Animations", demoPath: "/springs-demo", practicePath: "/springs-practice" },
+  { id: "advanced", title: "7. Advanced Transforms", demoPath: "/advanced-demo", practicePath: "/advanced-practice" },
 ];
 
 export default function Navigation({

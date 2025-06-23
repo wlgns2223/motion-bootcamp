@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
 /**
- * 실습 6: Advanced Transforms & Scroll
+ * 실습 7: Advanced Transforms & Scroll
  *
  * 목표: 스크롤 기반 고급 변환 애니메이션을 마스터해보세요
  *
@@ -222,7 +222,7 @@ const textY = useTransform(scrollYProgress, [0, 1], ["0%", "200%"]);
 export default function AdvancedTransformsPractice() {
   return (
     <div className="max-w-6xl mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Advanced Transforms & Scroll 실습</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">7. Advanced Transforms & Scroll 실습</h1>
 
       <div className="space-y-12">
         {/* 1. 스크롤 프로그레스 실습 */}

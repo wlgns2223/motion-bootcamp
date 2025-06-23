@@ -30,8 +30,16 @@ const lessons = [
     category: "기초",
   },
   {
+    id: "animate-presence",
+    title: "4. AnimatePresence",
+    description: "요소의 등장과 퇴장 애니메이션",
+    demoPath: "/animate-presence-demo",
+    practicePath: "/animate-presence-practice",
+    category: "기초",
+  },
+  {
     id: "motion-values",
-    title: "4. Motion Values",
+    title: "5. Motion Values",
     description: "useMotionValue & useTransform",
     demoPath: "/motion-values-demo",
     practicePath: "/motion-values-practice",
@@ -39,7 +47,7 @@ const lessons = [
   },
   {
     id: "springs",
-    title: "5. Spring Animations",
+    title: "6. Spring Animations",
     description: "useSpring으로 자연스러운 애니메이션",
     demoPath: "/springs-demo",
     practicePath: "/springs-practice",
@@ -47,7 +55,7 @@ const lessons = [
   },
   {
     id: "advanced",
-    title: "6. Advanced Transforms",
+    title: "7. Advanced Transforms",
     description: "스크롤 & 3D 변환",
     demoPath: "/advanced-demo",
     practicePath: "/advanced-practice",

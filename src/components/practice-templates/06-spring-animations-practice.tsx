@@ -4,7 +4,7 @@ import { motion, useSpring, useMotionValue, useTransform } from "motion/react";
 import { useState, useEffect } from "react";
 
 /**
- * 실습 5: Spring Animations
+ * 실습 6: Spring Animations
  *
  * 목표: useSpring을 활용하여 자연스러운 물리 기반 애니메이션을 구현해보세요
  *
@@ -191,7 +191,7 @@ export default function SpringAnimationsPractice() {
 
   return (
     <div className="max-w-6xl mx-auto p-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Spring Animations 실습</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">6. Spring Animations 실습</h1>
 
       <div className="space-y-12">
         {/* 1. 기본 스프링 실습 */}

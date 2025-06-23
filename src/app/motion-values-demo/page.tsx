@@ -1,10 +1,10 @@
-import MotionValues from "@/components/framer-advanced/04-motion-values";
+import MotionValues from "@/components/framer-advanced/05-motion-values";
 import Navigation from "@/components/Navigation";
 
 export default function MotionValuesDemoPage() {
   return (
     <>
-      <Navigation title="4. Motion Values - 강의" />
+      <Navigation title="5. Motion Values - 강의" />
       <MotionValues />
     </>
   );
