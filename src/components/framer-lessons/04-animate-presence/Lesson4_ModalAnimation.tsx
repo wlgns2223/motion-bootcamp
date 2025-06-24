@@ -115,7 +115,6 @@ const closeModal = () => setIsModalOpen(false);`,
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <h3 className="text-xl font-semibold mb-6 text-gray-800">📚 강의 4: 모달 애니메이션</h3>
-
       {/* 단계별 네비게이션 */}
       <div className="flex flex-wrap gap-2 mb-6">
         {steps.map((step, index) => (
@@ -130,7 +129,6 @@ const closeModal = () => setIsModalOpen(false);`,
           </button>
         ))}
       </div>
-
       {/* 현재 단계 설명 */}
       <div className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-400 mb-6">
         <h4 className="text-lg font-semibold mb-3 text-orange-800">
@@ -151,7 +149,6 @@ const closeModal = () => setIsModalOpen(false);`,
         <p className="text-sm text-gray-600 mb-4">스프링 애니메이션이 적용된 모달과 부드러운 배경 오버레이</p>
         <ModalExample />
       </div>
-
       {/* 라이브 코딩 영역 */}
       <ModalAnimationLiveCoding />
     </div>
